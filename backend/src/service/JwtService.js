@@ -1,32 +1,33 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 //tạo ra accsettoken
 const genneralAccessToken = async (payload) => {
     const access_token = await jwt.sign({
         payload
-    }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '2h' })
+    }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${process.env.TIME_EXPIRATION_ACCESS_TOKEN}` })
 
     return access_token
 }
 
 //tạo LÀM MỚI TOKEN
-const genneralRefreshToken = (payload) => {
-    const refresh_token = jwt.sign({
+const genneralRefreshToken = async (payload) => {
+    const refresh_token = await jwt.sign({
         payload
-    }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '365d' })
+    }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: `${process.env.TIME_EXPIRATION_REFRESH_TOKEN}` })
 
     return refresh_token
 }
 
-const refreshTokenJwtService = async (token) => {
+const refreshTokenJwtService = async (token, res) => {
     try {
         jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
 
             if (err) {
-                return {
-                    status: "OK",
-                    massage: "có lỗi khi xác thực !"
-                }
+                return res.status(401).json({
+                    status: "ERROR",
+                    massage: "xác thực Thất Bại",
+                })
             }
 
             const { payload } = user;
@@ -36,11 +37,11 @@ const refreshTokenJwtService = async (token) => {
                 is_admin: payload?.is_admin
             });
 
-            return {
+            return res.status(200).json({
                 status: "OK",
                 massage: "xác thực SUSSCES",
                 access_token
-            }
+            })
         })
 
     } catch (error) {

@@ -1,42 +1,146 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class account extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+const Sequelize = require('sequelize');
+module.exports = function (sequelize, DataTypes) {
+  const account = sequelize.define('account', {
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
+    username: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+      unique: "username"
+    },
+    password: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    create_time: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: Sequelize.Sequelize.fn('current_timestamp')
+    },
+    update_time: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: Sequelize.Sequelize.fn('current_timestamp')
+    },
+    ban: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+      defaultValue: 0
+    },
+    point_post: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    last_post: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    role: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: -1
+    },
+    is_admin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 0
+    },
+    last_time_login: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: "2002-05-07 07:00:00"
+    },
+    last_time_logout: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: "2002-05-07 07:00:00"
+    },
+    ip_address: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    active: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    thoi_vang: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    server_login: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: -1
+    },
+    bd_player: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+      defaultValue: 1
+    },
+    is_gift_box: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: 0
+    },
+    gift_time: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: "0"
+    },
+    reward: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    tongnap: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    coin: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
+    vnd: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 0
     }
-  }
-  account.init({
-    username: DataTypes.STRING,
-    password: DataTypes.STRING,
-    ban: DataTypes.SMALLINT,
-    point_post: DataTypes.INTEGER,
-    last_post: DataTypes.INTEGER,
-    role: DataTypes.INTEGER,
-    is_admin: DataTypes.TINYINT(1),
-    last_time_login: DataTypes.DATE,
-    last_time_logout: DataTypes.DATE,
-    ip_address: DataTypes.STRING,
-    active: DataTypes.INTEGER,
-    thoi_vang: DataTypes.INTEGER,
-    server_login: DataTypes.INTEGER,
-    bd_player: DataTypes.DOUBLE,
-    is_gift_box: DataTypes.TINYINT(1),
-    gift_time: DataTypes.STRING,
-    reward: DataTypes.TEXT('long'),
-    tongnap: DataTypes.INTEGER,
-    coin: DataTypes.INTEGER,
-    vnd: DataTypes.INTEGER,
   }, {
     sequelize,
-    modelName: 'account',
+    tableName: 'account',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "username",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "username" },
+        ]
+      },
+    ]
   });
+
+  account.associate = (models) => {
+    account.hasMany(models.Forum, { foreignKey: 'accountId' });
+  };
+
   return account;
 };

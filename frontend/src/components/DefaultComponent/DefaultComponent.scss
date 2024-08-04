@@ -1,0 +1,44 @@
+$mobile-width: 480px;
+$tablet-width: 768px;
+$desktop-width: 1024px;
+$desktopBig-width: 1200px;
+$pc-width: 1440px;
+
+.page_body {
+
+    @media screen and (min-width: $mobile-width) {
+        margin: 0 2rem;
+
+    }
+
+    @media screen and (min-width: $tablet-width) {
+        width: 960px;
+        margin: auto;
+    }
+
+    @media screen and (min-width: $desktop-width) {
+        width: 960px;
+        margin: auto;
+
+    }
+
+    @media screen and (min-width: $desktopBig-width) {
+        width: 960px;
+        margin: auto;
+    }
+
+    @media screen and (min-width: $pc-width) {
+        width: 960px;
+        margin: auto;
+    }
+
+    .container_Web {
+        padding: 10px 5px 22px 5px;
+
+        .container_Web_main {
+            background-color: #209834;
+            padding: 5px 3px;
+            border-radius: 10px;
+        }
+    }
+}

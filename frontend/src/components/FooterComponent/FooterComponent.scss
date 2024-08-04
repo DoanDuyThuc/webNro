@@ -1,0 +1,18 @@
+.Footer {
+
+    .Footer_text {
+        display: flex;
+        justify-content: center;
+        line-height: 15px;
+        height: 40px;
+        font-size: 12px;
+        padding-bottom: 10px;
+        padding-top: 6px;
+
+        span {
+            vertical-align: middle;
+            color: white;
+            font-size: 11px;
+        }
+    }
+}

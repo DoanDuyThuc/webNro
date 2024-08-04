@@ -1,0 +1,37 @@
+.NotifyAdminPage {
+    background-color: #efdeb0;
+    padding: 10px 10px 20px 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: start;
+    gap: 20px;
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+
+        >span {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+    }
+
+    &__content {
+        background-color: #fdf8da;
+        padding: 10px;
+        border-radius: 10px;
+
+        >h5 {
+            font-weight: 600;
+            color: #1e5b7e;
+        }
+
+        >span {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+    }
+}

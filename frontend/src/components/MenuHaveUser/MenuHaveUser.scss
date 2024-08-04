@@ -1,0 +1,158 @@
+.MenuHaveUser {
+
+    .MenuHaveUser_Infor {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .InforUser {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .InforUserName {
+                font-weight: 600;
+                margin: 10px 0 4px 0;
+                font-size: 1.2rem;
+                color: #fff;
+                text-shadow:
+                    1px 1px 1px #000,
+                    1px 1px 2px #000,
+                    1px 1px 3px #000,
+                    1px 1px 4px #000;
+            }
+
+            .InforUserList {
+                display: flex;
+                flex-direction: column;
+                // align-items: center;
+
+                .InforUserListItem {
+                    color: #e4494f;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    text-shadow:
+                        1px 1px 1px #000,
+                        1px 1px 2px #000,
+                        1px 1px 3px #000,
+                        1px 1px 4px #000;
+
+                    .InforUserListItemVerify {
+                        display: flex;
+                        align-items: center;
+                        gap: 6px;
+
+                        svg {
+                            color: #03A9F4;
+                            font-size: 1.2rem;
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    .MenuHaveUser_Select {
+
+        .MenuHaveUser_Select_list {
+            justify-content: center;
+            display: flex;
+            gap: 10px;
+            padding: 0;
+
+            .MenuHaveUser_Select_item {
+                &:hover .MenuHaveUser_Select_item-text {
+                    background-color: #fff;
+                    color: #4aa7f5;
+                    border: 1px solid #ccc;
+                }
+
+                .MenuHaveUser_Select_item-text {
+                    text-decoration: none;
+                    color: #fff;
+                    font-weight: 600;
+                    padding: 6px 8px;
+                    background-color: #27380f;
+                    border-radius: 5px;
+                    border: 1px solid #3eec09;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .Active_User {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 24px;
+        gap: 10px;
+
+        span {
+            color: #fff;
+        }
+
+        button {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            padding: 4px 10px;
+            background-color: rgba(220, 53, 69, .25);
+            border-radius: 5px;
+            border: 1px solid #000;
+            cursor: pointer;
+            color: #000;
+            margin-bottom: 10px;
+        }
+    }
+
+}
+
+.ModalFormHave {
+
+    .ModalContentHave {
+        background-color: #efdeb0;
+        padding: 40px 0;
+        text-align: center;
+
+        .ModalContentTitleHave {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+
+            h3 {
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
+
+            h4 {
+                font-size: 1rem;
+                margin: 10px 0;
+            }
+
+            span {
+                color: green;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+
+            button {
+                box-shadow: 2px 5px 5px 0px #1b1b1b;
+                padding: 6px 12px;
+                text-decoration: none;
+                background-color: #619d1f;
+                border-radius: 10px;
+                color: #fff;
+                font-weight: 600;
+                text-shadow:
+                    2px 2px 1px black,
+                    1px 2px 1px black,
+                ;
+                margin-top: 10px;
+                transition: 0.3s;
+            }
+        }
+    }
+}

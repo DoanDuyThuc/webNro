@@ -1,10 +1,21 @@
-const { registerService, loginService } = require('../service/accountService');
+const {
+    registerService,
+    loginService,
+    ChangePassWordService,
+    GetUserIdService,
+    ActiveUserService,
+    ExchangeCoinService,
+    forumPostService,
+    getforumPostService,
+    getDetaisforumPostService
+} = require('../service/accountService');
 const { refreshTokenJwtService } = require('../service/JwtService');
+const path = require('path');
 
 const registerController = async (req, res) => {
     try {
-        const { username, password, enterPassword, server_login } = req.body;
-        const user = await registerService(username, password, enterPassword, server_login);
+        const { username, password, enterPassword } = req.body;
+        const user = await registerService(username, password, enterPassword);
 
         res.status(200).json(user);
 
@@ -22,14 +33,40 @@ const loginController = async (req, res) => {
 
         res.cookie('refresh_token', refresh_token, {
             httpOnly: true,
-            sameSite: 'none',
-            secure: false
+            secure: false, // Đặt là true nếu bạn sử dụng HTTPS
+            sameSite: 'Strict',
         });
 
         res.status(200).json(resj);
 
     } catch (error) {
         console.log(error);
+    }
+}
+
+const logoutController = async (req, res) => {
+    try {
+        res.clearCookie('refresh_token');
+        res.status(200).json({
+            status: "ok",
+            message: "Đã đăng xuất"
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const ChangePassWordController = async (req, res) => {
+    try {
+        const { oldPass, newPass, EnterNewPass } = req.body;
+
+        const idUser = req.user.id;
+
+        const user = await ChangePassWordService(oldPass, newPass, EnterNewPass, idUser);
+        res.status(200).json(user);
+
+    } catch (error) {
+        res.status(401).json(error);
     }
 }
 
@@ -43,8 +80,7 @@ const refreshToken = async (req, res) => {
                 massage: "không tìm thấy token !"
             })
         }
-        const resj = await refreshTokenJwtService(token)
-        return res.status(200).json(resj)
+        return await refreshTokenJwtService(token, res)
     } catch (error) {
         return res.status(404).json({
             massage: error
@@ -52,4 +88,82 @@ const refreshToken = async (req, res) => {
     }
 }
 
-module.exports = { registerController, loginController, refreshToken };
+//GET USER ID
+const GetUserIdController = async (req, res) => {
+    try {
+        const idUser = req.params.id;
+        const resj = await GetUserIdService(idUser);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const ActiveUserController = async (req, res) => {
+    try {
+        const idUser = req.params.id;
+        const resj = await ActiveUserService(idUser);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const ExchangeCoinController = async (req, res) => {
+    try {
+        const newdata = req.body;
+        const idUser = req.params.id;
+        const resj = await ExchangeCoinService(idUser, newdata);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// diễn đàn
+const forumPostController = async (req, res) => {
+
+    console.log(req.body);
+
+    try {
+        const newdata = req.body;
+
+        const resj = await forumPostService(newdata);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getforumPostController = async (req, res) => {
+    try {
+        const resj = await getforumPostService();
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getDetaisforumPostController = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const resj = await getDetaisforumPostService(id);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+module.exports = {
+    registerController,
+    loginController,
+    refreshToken,
+    ChangePassWordController,
+    GetUserIdController,
+    logoutController,
+    ActiveUserController,
+    ExchangeCoinController,
+    forumPostController,
+    getforumPostController,
+    getDetaisforumPostController
+};

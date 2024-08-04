@@ -1,0 +1,40 @@
+.ForumNotify {
+    border-radius: 10px;
+
+    &__Header {
+        padding: 10px 0 4px 0;
+        margin: 0 20px 10px 20px;
+        font-weight: 600;
+        font-size: 1.2rem;
+
+        border-bottom: 1px solid #80808075;
+    }
+
+    &__Content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 10px;
+        margin: 15px;
+        background-color: #fdf8da;
+        border-bottom: 1px solid #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 2px 2px #ffb473;
+
+        &__title {
+            height: 100%;
+            flex: 1 0;
+
+            h4 {
+                font-size: 1rem;
+            }
+
+            span {
+                color: rgba(0, 0, 0, .45);
+                font-size: 14px;
+                line-height: 1.5715;
+            }
+        }
+    }
+}

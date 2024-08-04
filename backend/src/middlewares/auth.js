@@ -4,7 +4,7 @@ dotenv.config()
 
 //xác thực admin
 const authMiddleware = (req, res, next) => {
-    const token = req.headers.token.split(' ')[1];
+    const token = req.headers.authorization.split(' ')[1];
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, user) {
         if (err) {
@@ -14,6 +14,8 @@ const authMiddleware = (req, res, next) => {
             })
         }
         const { payload } = user;
+        req.user = payload;
+
         if (payload?.is_admin) {
             next();
         } else {
@@ -28,18 +30,20 @@ const authMiddleware = (req, res, next) => {
 
 //xác thực account
 const authAccountMiddleware = (req, res, next) => {
-    const token = req.headers.token.split(' ')[1];
+    const token = req.headers.authorization.split(' ')[1];
     const userId = req.params.id
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, user) {
         if (err) {
             return res.status(401).json({
                 status: "err",
+                err,
                 massage: "có lỗi khi xác thực !"
             })
         }
         const { payload } = user;
-        if (payload?.is_admin || payload?.id === userId) {
+        req.user = payload;
+        if (payload?.is_admin || payload?.id === Number(userId)) {
             next();
         } else {
             return res.status(401).json({
@@ -47,7 +51,6 @@ const authAccountMiddleware = (req, res, next) => {
                 massage: "có lỗi khi xác thực !"
             })
         }
-
     });
 }
 

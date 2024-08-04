@@ -6,6 +6,13 @@ const xss = require('xss-clean');
 const helmet = require('helmet');
 
 const ConfigViewEngine = (app) => {
+
+    // Cấu hình CORS(Cross-Origin Resource Sharing) 
+    app.use(cors({
+        origin: 'http://localhost:3000', // Địa chỉ của frontend
+        credentials: true // Để cho phép gửi cookie
+    }));
+
     // parse application/x-www-form-urlencoded
     app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -17,9 +24,6 @@ const ConfigViewEngine = (app) => {
 
     // morgan để ghi lại log của các yêu cầu HTTP
     app.use(morgan('dev'));
-
-    // Cấu hình CORS(Cross-Origin Resource Sharing) 
-    app.use(cors());
 
     // Middleware để làm sạch dữ liệu đầu vào để chống XSS
     app.use(xss());

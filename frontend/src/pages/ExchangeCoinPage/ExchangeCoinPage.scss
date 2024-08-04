@@ -1,0 +1,71 @@
+.ExchangeCoinPage {
+    background-color: #efdfb0;
+
+    h4 {
+        padding: 20px 0 10px 0;
+        text-align: center;
+        font-weight: 600;
+        margin: 0;
+        font-size: 1.4rem;
+    }
+
+    &__content {
+        background-color: rgb(253, 248, 218);
+
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+
+        &__list {
+            width: 70%;
+            text-align: center;
+            margin: 10px 0;
+
+            &--item {
+                margin: 10px 0;
+
+                >div {
+                    background-color: #0d2b11;
+                    border-radius: 8px;
+                    padding: 16px;
+                    cursor: pointer;
+
+                    >h4 {
+                        color: #fff;
+                        padding: 0;
+                        font-size: 1.2rem;
+                        margin: 6px;
+                    }
+
+                    >svg {
+                        color: #fff;
+                        font-size: 1.6rem;
+                    }
+                }
+
+                .selected {
+                    background-color: #619d1f;
+                }
+            }
+
+        }
+
+        &--btn {
+            box-shadow: 2px 5px 5px 0px #1b1b1b;
+            padding: 10px 20px;
+            text-decoration: none;
+            background-color: #619d1f;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            text-shadow:
+                2px 2px 1px black,
+                1px 2px 1px black,
+            ;
+            transition: 0.3s;
+            margin: 20px 0;
+        }
+
+    }
+}
