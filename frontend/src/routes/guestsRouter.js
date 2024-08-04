@@ -1,3 +1,4 @@
+import DiscussForumPage from "../pages/DiscussForumPage/DiscussForumPage";
 import ForumPage from "../pages/ForumPage/ForumPage";
 import HomePage from "../pages/HomePage/HomePage";
 import NotifyAdminPage from "../pages/NotifyAdminPage/NotifyAdminPage";
@@ -17,8 +18,13 @@ const guestsRouter =
             isHeaderFooter: true,
         },
         {
-            path: '/forum/notify/1',
+            path: '/forum/notify/:id',
             page: NotifyAdminPage,
+            isHeaderFooter: true,
+        },
+        {
+            path: '/forum/discuss/:id',
+            page: DiscussForumPage,
             isHeaderFooter: true,
         }
     ]

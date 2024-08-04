@@ -32,7 +32,7 @@ function ForumDiscussComponent({ data }) {
                     })()}
                     <div className='ForumDiscuss__content__title'>
                         <h4>
-                            <NavLink to='/forum/discuss/1'>{item.title}</NavLink>
+                            <NavLink to={`/forum/discuss/${item.id}`}>{item.title}</NavLink>
                         </h4>
                         <span>
                             Đăng bởi: {item.name}

@@ -294,7 +294,7 @@ const getforumPostService = async () => {
                 model: db.account,
                 attributes: ['is_admin']
             },
-            attributes: ['avartar', 'title', 'name'],
+            attributes: ['id', 'avartar', 'title', 'name'],
             order: [
                 ['id', 'DESC']
             ]

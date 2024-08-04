@@ -117,9 +117,18 @@ export const PostForumService = async (newData) => {
     }
 }
 
-export const GetPostForumService = async (newData) => {
+export const GetPostForumService = async () => {
     try {
         const res = await axios.get(`${hostLocal}/account/getforumPost`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const GetDetaisPostForumService = async (id) => {
+    try {
+        const res = await axios.get(`${hostLocal}/account/getDetaisforumPost/${id}`);
         return res.data;
     } catch (error) {
         console.log(error);

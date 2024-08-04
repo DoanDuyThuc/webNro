@@ -15,7 +15,7 @@ function ForumNotifyComponent({ data }) {
                     <Image width={60} src={AdminRose} />
                     <div className='ForumNotify__Content__title'>
                         <h4>
-                            <NavLink to='/forum/notify/1'>{item.title}</NavLink>
+                            <NavLink to={`/forum/notify/${item.id}`}>{item.title}</NavLink>
                         </h4>
                         <span>
                             Đăng bởi: {item.name}
