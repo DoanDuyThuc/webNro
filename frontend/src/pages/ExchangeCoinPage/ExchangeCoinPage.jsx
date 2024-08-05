@@ -58,6 +58,9 @@ function ExchangeCoinPage() {
             const resj = await ExchangeCoinService(newTodo.token, newTodo.id, newTodo.data);
             return resj
         },
+        onMutate: async (newTodo) => {
+            await queryClient.cancelQueries('player');
+        },
         onSuccess: (data) => {
             toast(`🐉 ${data.message}`, {
                 position: "top-right",
@@ -94,7 +97,7 @@ function ExchangeCoinPage() {
 
     const handleSubmitExchange = () => {
 
-        mutation.mutate({
+        mutation.mutateAsync({
             token: user?.accset_Token,
             id: user?.user?.id,
             data: selectedItem

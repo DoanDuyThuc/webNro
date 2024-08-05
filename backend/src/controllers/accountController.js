@@ -6,8 +6,11 @@ const {
     ActiveUserService,
     ExchangeCoinService,
     forumPostService,
-    getforumPostService,
-    getDetaisforumPostService
+    getforumPostAdminService,
+    getforumPostDiscussService,
+    getDetaisforumPostService,
+    EditforumPostService,
+    forumPostCommentService
 } = require('../service/accountService');
 const { refreshTokenJwtService } = require('../service/JwtService');
 const path = require('path');
@@ -135,9 +138,19 @@ const forumPostController = async (req, res) => {
     }
 }
 
-const getforumPostController = async (req, res) => {
+const getforumPostAdminController = async (req, res) => {
     try {
-        const resj = await getforumPostService();
+        const resj = await getforumPostAdminService();
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getforumPostDiscussController = async (req, res) => {
+    try {
+        const { page, limit } = req.query;
+        const resj = await getforumPostDiscussService(parseInt(page), parseInt(limit));
         res.status(200).json(resj);
     } catch (error) {
         console.log(error);
@@ -154,6 +167,27 @@ const getDetaisforumPostController = async (req, res) => {
     }
 }
 
+const EditforumPostController = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const newdata = req.body;
+        const resj = await EditforumPostService(id, newdata);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const forumPostCommentController = async (req, res) => {
+    try {
+        const newdata = req.body;
+        const resj = await forumPostCommentService(newdata);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     registerController,
     loginController,
@@ -164,6 +198,9 @@ module.exports = {
     ActiveUserController,
     ExchangeCoinController,
     forumPostController,
-    getforumPostController,
-    getDetaisforumPostController
+    getforumPostAdminController,
+    getforumPostDiscussController,
+    getDetaisforumPostController,
+    EditforumPostController,
+    forumPostCommentController
 };

@@ -9,8 +9,11 @@ const {
     ActiveUserController,
     ExchangeCoinController,
     forumPostController,
-    getforumPostController,
-    getDetaisforumPostController
+    getforumPostAdminController,
+    getforumPostDiscussController,
+    getDetaisforumPostController,
+    EditforumPostController,
+    forumPostCommentController
 } = require('../controllers/accountController');
 const { authAccountMiddleware } = require('../middlewares/auth');
 const router = express.Router();
@@ -26,7 +29,11 @@ router.post('/activeUser/:id', authAccountMiddleware, ActiveUserController);
 router.put('/exchangeCoin/:id', authAccountMiddleware, ExchangeCoinController);
 // diễn đàn
 router.post('/forumPost', forumPostController);
-router.get('/getforumPost', getforumPostController);
+router.get('/getforumPostAdmin', getforumPostAdminController);
+router.get('/getforumPostDiscuss', getforumPostDiscussController);
 router.get('/getDetaisforumPost/:id', getDetaisforumPostController);
+router.put('/EditforumPost/:id', EditforumPostController);
+// comment diễn đàn
+router.post('/forumPostComment', forumPostCommentController);
 
 module.exports = router;

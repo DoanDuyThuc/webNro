@@ -8,7 +8,7 @@ import './PostForumPage.scss';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { PostForumService } from '../../services/AccountService';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -18,13 +18,14 @@ function PostForumPage() {
 
     const user = useSelector(state => state.user);
     const navigate = useNavigate()
-    //bắt đầu stala
+    const queryClient = useQueryClient();
+
 
     const { Formik } = formik;
 
     const schema = yup.object().shape({
-        title: yup.string().required('Required'),
-        content: yup.string().required('Required'),
+        title: yup.string().required('Vui lòng không để trống !'),
+        content: yup.string().required('Vui lòng không để trống !'),
     });
 
     const fetchPostForum = async (newData) => {
@@ -34,6 +35,9 @@ function PostForumPage() {
 
     //mutations
     const mutations = useMutation(fetchPostForum, {
+        onMutate: async (newData) => {
+            await queryClient.cancelQueries('forum_detais');
+        },
         onSuccess: (data) => {
             toast(`🐉 ${data?.message}`, {
                 position: "top-right",
@@ -63,7 +67,7 @@ function PostForumPage() {
                 onSubmit={async (values) => {
 
                     try {
-                        mutations.mutate({
+                        mutations.mutateAsync({
                             formData: values
                         });
                         // console.log(values);
@@ -92,7 +96,6 @@ function PostForumPage() {
                                     name='name'
                                     type="hidden"
                                 />
-                                <formik.ErrorMessage className='errorMForm' name="title" component="div" />
                             </Form.Group>
                             <Form.Group className='mb-4' controlId="accountId">
                                 <Form.Control
@@ -100,7 +103,6 @@ function PostForumPage() {
                                     name='accountId'
                                     type="hidden"
                                 />
-                                <formik.ErrorMessage className='errorMForm' name="accountId" component="div" />
                             </Form.Group>
                             <Form.Group className='mb-4' controlId="avatar">
                                 <Form.Control
@@ -108,7 +110,6 @@ function PostForumPage() {
                                     name='avatar'
                                     type="hidden"
                                 />
-                                <formik.ErrorMessage className='errorMForm' name="avatar" component="div" />
                             </Form.Group>
 
                             {/* hiện */}

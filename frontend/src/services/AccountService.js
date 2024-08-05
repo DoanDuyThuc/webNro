@@ -117,9 +117,18 @@ export const PostForumService = async (newData) => {
     }
 }
 
-export const GetPostForumService = async () => {
+export const GetPostForumAdminService = async () => {
     try {
-        const res = await axios.get(`${hostLocal}/account/getforumPost`);
+        const res = await axios.get(`${hostLocal}/account/getforumPostAdmin`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const GetPostForumDicussService = async (page, limit) => {
+    try {
+        const res = await axios.get(`${hostLocal}/account/getforumPostDiscuss?page=${page}&limit=${limit}`);
         return res.data;
     } catch (error) {
         console.log(error);
@@ -129,6 +138,22 @@ export const GetPostForumService = async () => {
 export const GetDetaisPostForumService = async (id) => {
     try {
         const res = await axios.get(`${hostLocal}/account/getDetaisforumPost/${id}`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const EditForumService = async (token, id, newData) => {
+    try {
+        const res = await axiosInstance.put(`${hostLocal}/account/EditforumPost/${id}`,
+            newData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
         return res.data;
     } catch (error) {
         console.log(error);

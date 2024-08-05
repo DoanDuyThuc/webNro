@@ -41,7 +41,7 @@ function NotifyAdminPage() {
             <div className='NotifyAdminPage__content'>
                 <h5>{dataNotifyAdmin?.data?.post.title}</h5>
                 <span>{dataNotifyAdmin?.data?.post.createdAt}</span>
-                <NotifyAdminDetailsComponent content={parse(parse(dataNotifyAdmin?.data?.post.content))} />
+                <NotifyAdminDetailsComponent content={parse(parse(String(dataNotifyAdmin?.data?.post?.content)))} />
             </div>
         </div>
     );

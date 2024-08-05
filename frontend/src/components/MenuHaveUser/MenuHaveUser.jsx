@@ -71,6 +71,14 @@ function MenuHaveUser() {
 
     //handle Mutations
     const mutation = useMutation(acticeFetch, {
+        onMutate: async (newData) => {
+            await queryClient.cancelQueries('player');
+            const previousData = queryClient.getQueryData('player');
+            queryClient.setQueryData('player', (old) => {
+                return old;
+            });
+            return { previousData };
+        },
         onSuccess: (data) => {
             toast(`🐉 ${data.message}`, {
                 position: "top-right",
@@ -100,7 +108,7 @@ function MenuHaveUser() {
     });
 
     const handleActiveUser = async () => {
-        mutation.mutate({
+        mutation.mutateAsync({
             token: user?.accset_Token,
             id: user?.user?.id
         });

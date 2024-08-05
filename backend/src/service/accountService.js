@@ -287,11 +287,14 @@ const forumPostService = async (newdata) => {
     }
 }
 
-const getforumPostService = async () => {
+const getforumPostAdminService = async () => {
     try {
         const post = await db.Forum.findAll({
             include: {
                 model: db.account,
+                where: {
+                    is_admin: 1
+                },
                 attributes: ['is_admin']
             },
             attributes: ['id', 'avartar', 'title', 'name'],
@@ -302,14 +305,59 @@ const getforumPostService = async () => {
 
         return {
             post,
-            message: 'Lấy Bài Viết Thành Công !'
+            message: 'Lấy Bài Viết admin Thành Công !'
         }
 
     } catch (error) {
         console.log(error);
         return {
             error,
-            message: 'Lấy Bài Viết Thất Bại !'
+            message: 'Lấy Bài Viết admin Thất Bại !'
+        }
+    }
+}
+
+const getforumPostDiscussService = async (page = 1, limit = 10) => {
+    try {
+        const offset = (page - 1) * limit;
+        const totalPage = await db.Forum.count({
+            include: {
+                model: db.account,
+                where: {
+                    is_admin: 0
+                },
+                attributes: ['is_admin']
+            },
+        })
+
+
+        const post = await db.Forum.findAll({
+            include: {
+                model: db.account,
+                where: {
+                    is_admin: 0
+                },
+                attributes: ['is_admin']
+            },
+            attributes: ['id', 'avartar', 'title', 'name'],
+            order: [
+                ['id', 'DESC']
+            ],
+            limit: limit,
+            offset: offset
+        })
+
+        return {
+            post,
+            totalPage: Math.ceil(totalPage / limit),
+            message: 'Lấy Bài Viết Discuss Thành Công !'
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Lấy Bài Viết Discuss Thất Bại !'
         }
     }
 }
@@ -336,6 +384,66 @@ const getDetaisforumPostService = async (id) => {
     }
 }
 
+const EditforumPostService = async (id, newdata) => {
+    try {
+        await db.Forum.update({
+            title: newdata.title,
+            content: newdata.content,
+        }, {
+            where: {
+                id
+            }
+        })
+
+        return {
+            message: 'Chỉnh Sửa Bài Viết Thành Công !'
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Chỉnh Sửa Bài Viết Thất Bại !'
+        }
+    }
+}
+
+const forumPostCommentService = async (newdata) => {
+    try {
+        const user = await db.account.findOne({
+            attributes: ['id', 'username', 'is_admin', 'active'],
+            where: {
+                id: newdata.accountId
+            }
+        });
+
+        const post = await db.ForumComment.create({
+            name: newdata.name,
+            avartar: newdata.avatar,
+            content: newdata.content,
+            forumId: newdata.forumId
+        })
+
+        if (user.active === 0) {
+            return {
+                message: 'Vui lòng kích hoạt tài khoản để đăng bình luận !'
+            }
+        } else if (user.active === 1 || user.is_admin === 1) {
+            return {
+                post,
+                message: 'Đăng Bình Luận Thành Công !'
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Đăng Bình Luận Thất Bại !'
+        }
+    }
+}
+
 module.exports = {
     registerService,
     loginService,
@@ -344,6 +452,9 @@ module.exports = {
     ActiveUserService,
     ExchangeCoinService,
     forumPostService,
-    getforumPostService,
-    getDetaisforumPostService
+    getforumPostAdminService,
+    getforumPostDiscussService,
+    getDetaisforumPostService,
+    EditforumPostService,
+    forumPostCommentService
 };
