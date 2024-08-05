@@ -8,6 +8,7 @@ import { GetDetaisPostForumService } from '../../services/AccountService';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import parse from 'html-react-parser';
+import CustomTimeAgo from '../../utils/CustomTimeAgo';
 
 
 function NotifyAdminPage() {
@@ -40,7 +41,7 @@ function NotifyAdminPage() {
             </div>
             <div className='NotifyAdminPage__content'>
                 <h5>{dataNotifyAdmin?.data?.post.title}</h5>
-                <span>{dataNotifyAdmin?.data?.post.createdAt}</span>
+                <span>{CustomTimeAgo(dataNotifyAdmin?.data?.post.createdAt)}</span>
                 <NotifyAdminDetailsComponent content={parse(parse(String(dataNotifyAdmin?.data?.post?.content)))} />
             </div>
         </div>

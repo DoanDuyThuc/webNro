@@ -5,9 +5,9 @@ import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import AdminRose from '../../public/images/adminRose.png';
 import './DiscussForumPage.scss';
-import { EditForumService, GetDetaisPostForumService } from '../../services/AccountService';
+import { DeleteforumPostService, EditForumService, GetDetaisPostForumService } from '../../services/AccountService';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import * as formik from 'formik';
 import * as yup from 'yup';
@@ -23,30 +23,33 @@ import parse from 'html-react-parser';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import CommentForumComponent from '../../components/CommentForumComponent/CommentForumComponent';
+import CustomTimeAgo from '../../utils/CustomTimeAgo';
 
 function DiscussForumPage() {
 
     const { id } = useParams();
     const [showEdit, setShowEdit] = useState(false);
     const user = useSelector(state => state.user);
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { Formik } = formik;
 
-    const fetchNotifyAdmin = async () => {
-        const response = await GetDetaisPostForumService(id);
-        return response;
-    }
-
-    const dataNotifyAdmin = useQuery(['forum_detais'],
-        () => fetchNotifyAdmin(), {
+    const dataNotifyAdmin = useQuery({
+        queryKey: ['forum_detais', id],
+        queryFn: async () => {
+            const response = await GetDetaisPostForumService(id);
+            return response;
+        },
         enabled: !!id,
+        keepPreviousData: true,
         onSuccess: (data) => {
             return data;
         },
         onError: (error) => {
             console.error('Error fetching player data:', error);
-        },
-    });
+        }
+    })
 
     //modal
     const handleCloseEdit = () => setShowEdit(false);
@@ -55,7 +58,7 @@ function DiscussForumPage() {
     //mutations
     const mutationEditForum = useMutation(
         async (newData) => {
-            const response = await EditForumService(newData.token, newData.id, newData.newData);
+            const response = await EditForumService(newData.id, newData.newData);
             return response;
         },
         {
@@ -84,9 +87,44 @@ function DiscussForumPage() {
             onError: (error) => {
                 console.error('Error fetching player data:', error)
             }
-        })
+        }
+    )
 
+    const mutationDeleteForum = useMutation({
+        mutationFn: async (id) => {
+            const response = await DeleteforumPostService(id);
+            return response;
+        },
+        onMutate: async (data) => {
+            await queryClient.cancelQueries('forum_discuss');
+            const previousData = queryClient.getQueryData('forum_discuss');
+            queryClient.setQueryData('forum_discuss', (old) => {
+                return old;
+            });
+            return { previousData };
+        },
+        onSuccess: (data) => {
+            toast(`🐉 ${data?.message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            queryClient.invalidateQueries('forum_discuss');
+            navigate('/forum');
+        },
+        onError: (error) => {
+            console.error('Error fetching player data:', error)
+        }
+    })
 
+    const handleDeleteForum = async () => {
+        mutationDeleteForum.mutateAsync(id);
+    }
 
     return (
 
@@ -113,26 +151,31 @@ function DiscussForumPage() {
                         <div className='DiscussForumPage__container__content__Top'>
                             <div className='DiscussForumPage__container__content__Top__left'>
                                 <h5>{dataNotifyAdmin?.data?.post.title}</h5>
-                                <span>{dataNotifyAdmin?.data?.post.createdAt}</span>
+                                <span>{CustomTimeAgo(dataNotifyAdmin?.data?.post.createdAt)}</span>
                             </div>
                             {dataNotifyAdmin?.data?.post.accountId === user?.user?.id && (
                                 <div className='DiscussForumPage__container__content__Top__right'>
                                     <Button onClick={handleShowEdit}  >Chỉnh sửa</Button>
+                                    <Button onClick={handleDeleteForum} variant="danger"  >Xóa Bài</Button>
                                 </div>
                             )}
                         </div>
                         <DiscussDetailsComponent content={parse(parse(String(dataNotifyAdmin?.data?.post.content)))} />
                     </div>
                 </div>
-                ds
+                {/* comment */}
+                <div className='CommentForumComponent'>
+                    <CommentForumComponent />
+
+                </div>
             </div>
+            {/* modal */}
             <Modal className='ModalForm' show={showEdit} onHide={handleCloseEdit}>
                 <div className='ModalContent'>
                     <Image width={'70%'} src={logo} alt='logo' />
                     <Formik
                         onSubmit={async (values) => {
                             mutationEditForum.mutateAsync({
-                                token: user?.accset_Token,
                                 id: id,
                                 newData: values
                             });

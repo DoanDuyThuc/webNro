@@ -13,7 +13,9 @@ const {
     getforumPostDiscussController,
     getDetaisforumPostController,
     EditforumPostController,
-    forumPostCommentController
+    forumPostCommentController,
+    getforumCommentController,
+    DeleteforumPostController
 } = require('../controllers/accountController');
 const { authAccountMiddleware } = require('../middlewares/auth');
 const router = express.Router();
@@ -33,7 +35,9 @@ router.get('/getforumPostAdmin', getforumPostAdminController);
 router.get('/getforumPostDiscuss', getforumPostDiscussController);
 router.get('/getDetaisforumPost/:id', getDetaisforumPostController);
 router.put('/EditforumPost/:id', EditforumPostController);
+router.delete('/DeleteforumPost/:id', DeleteforumPostController);
 // comment diễn đàn
-router.post('/forumPostComment', forumPostCommentController);
+router.post('/forumPostComment/:id', authAccountMiddleware, forumPostCommentController);
+router.get('/GetforumComment', getforumCommentController);
 
 module.exports = router;

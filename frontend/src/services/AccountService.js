@@ -144,16 +144,42 @@ export const GetDetaisPostForumService = async (id) => {
     }
 }
 
-export const EditForumService = async (token, id, newData) => {
+export const EditForumService = async (id, newData) => {
     try {
-        const res = await axiosInstance.put(`${hostLocal}/account/EditforumPost/${id}`,
-            newData,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
+        const res = await axios.put(`${hostLocal}/account/EditforumPost/${id}`,
+            newData
         );
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const GetForumCommentService = async (id) => {
+    try {
+        const res = await axios.get(`${hostLocal}/account/GetforumComment/?forumId=${id}`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const ReplyForumCommentService = async (token, id, newdata) => {
+    try {
+        const res = await axios.post(`${hostLocal}/account/forumPostComment/${id}`, newdata, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const DeleteforumPostService = async (id) => {
+    try {
+        const res = await axios.delete(`${hostLocal}/account/DeleteforumPost/${id}`);
         return res.data;
     } catch (error) {
         console.log(error);

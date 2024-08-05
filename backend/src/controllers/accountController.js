@@ -10,7 +10,9 @@ const {
     getforumPostDiscussService,
     getDetaisforumPostService,
     EditforumPostService,
-    forumPostCommentService
+    forumPostCommentService,
+    getforumCommentService,
+    DeleteforumPostService
 } = require('../service/accountService');
 const { refreshTokenJwtService } = require('../service/JwtService');
 const path = require('path');
@@ -180,8 +182,29 @@ const EditforumPostController = async (req, res) => {
 
 const forumPostCommentController = async (req, res) => {
     try {
+        const userId = req.params.id;
         const newdata = req.body;
-        const resj = await forumPostCommentService(newdata);
+        const resj = await forumPostCommentService(newdata, userId);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getforumCommentController = async (req, res) => {
+    try {
+        const forumId = req.query.forumId;
+        const resj = await getforumCommentService(forumId);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const DeleteforumPostController = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const resj = await DeleteforumPostService(id);
         res.status(200).json(resj);
     } catch (error) {
         console.log(error);
@@ -202,5 +225,7 @@ module.exports = {
     getforumPostDiscussController,
     getDetaisforumPostController,
     EditforumPostController,
-    forumPostCommentController
+    forumPostCommentController,
+    getforumCommentController,
+    DeleteforumPostController
 };

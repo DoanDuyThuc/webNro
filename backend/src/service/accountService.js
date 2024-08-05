@@ -408,18 +408,18 @@ const EditforumPostService = async (id, newdata) => {
     }
 }
 
-const forumPostCommentService = async (newdata) => {
+const forumPostCommentService = async (newdata, userId) => {
     try {
         const user = await db.account.findOne({
             attributes: ['id', 'username', 'is_admin', 'active'],
             where: {
-                id: newdata.accountId
+                id: userId
             }
         });
 
-        const post = await db.ForumComment.create({
+        const post = await db.forum_comment.create({
             name: newdata.name,
-            avartar: newdata.avatar,
+            avartar: newdata.avartar,
             content: newdata.content,
             forumId: newdata.forumId
         })
@@ -444,6 +444,62 @@ const forumPostCommentService = async (newdata) => {
     }
 }
 
+const getforumCommentService = async (forumId) => {
+    try {
+        const post = await db.forum_comment.findAll({
+            where: {
+                forumId: forumId
+            },
+            include: {
+                model: db.Forum,
+                attributes: ['id', 'name']
+            },
+            order: [
+                ['id', 'DESC']
+            ]
+        })
+
+        return {
+            post,
+            message: 'Lấy Bình Luận Thành Công !'
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Lấy Bình Luận Thất Bại !'
+        }
+    }
+}
+
+const DeleteforumPostService = async (id) => {
+    try {
+        const result = await db.Forum.destroy({
+            where: {
+                id
+            }
+        })
+
+        if (result) {
+            return {
+                message: 'Xóa Bài Viết Thành Công !'
+            }
+        } else {
+            return {
+                message: 'Không tìm thấy bài viết !'
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Xóa Bài Viết Thất Bại !'
+        }
+    }
+}
+
 module.exports = {
     registerService,
     loginService,
@@ -456,5 +512,7 @@ module.exports = {
     getforumPostDiscussService,
     getDetaisforumPostService,
     EditforumPostService,
-    forumPostCommentService
+    forumPostCommentService,
+    getforumCommentService,
+    DeleteforumPostService
 };

@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
 
 function ForumDiscussComponent() {
 
+    const queryClient = useQueryClient();
+
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const limit = 5;
@@ -45,32 +47,41 @@ function ForumDiscussComponent() {
         <div className='ForumDiscuss'>
             <h5 className='ForumNotify__Header'>Những Lời Đàm Tiếu</h5>
 
-            {!data.isLoading ? (data?.data?.post.map((item, index) => (
+            {data?.data?.post.length > 0 ? (
+                !data.isLoading ? (data?.data?.post.map((item, index) => (
+                    <div key={index} className='ForumDiscuss__content'>
+                        {(() => {
+                            switch (item?.avartar) {
+                                case '0':
+                                    return <Image src={traidat} height={60} width={60} />
+                                case '1':
+                                    return <Image src={namec} height={60} width={60} />
 
-                <div key={index} className='ForumDiscuss__content'>
-                    {(() => {
-                        switch (item?.avartar) {
-                            case '0':
-                                return <Image src={traidat} height={60} width={60} />
-                            case '1':
-                                return <Image src={namec} height={60} width={60} />
-
-                            case '2':
-                                return <Image src={xayda} height={60} width={60} />
-                            default:
-                                return <Image src={AdminRose} height={60} width={60} />
-                        }
-                    })()}
-                    <div className='ForumDiscuss__content__title'>
-                        <h4>
-                            <NavLink to={`/forum/discuss/${item.id}`}>{item.title}</NavLink>
-                        </h4>
-                        <span>
-                            Đăng bởi: {item.name}
-                        </span>
+                                case '2':
+                                    return <Image src={xayda} height={60} width={60} />
+                                default:
+                                    return <Image src={AdminRose} height={60} width={60} />
+                            }
+                        })()}
+                        <div className='ForumDiscuss__content__title'>
+                            <h4>
+                                <NavLink to={`/forum/discuss/${item.id}`}>{item.title}</NavLink>
+                            </h4>
+                            <span>
+                                Đăng bởi: {item.name}
+                            </span>
+                        </div>
                     </div>
+                ))) : 'Loading...'
+            ) : (
+                <div style={{
+                    textAlign: 'center',
+                    fontSize: '1.2rem',
+                    fontWeight: '600'
+                }}>
+                    Không có bài viết
                 </div>
-            ))) : 'Loading...'}
+            )}
             <div className='ForumDiscuss__panigate'>
                 <Pagination>
                     <Pagination.Prev onClick={() => {

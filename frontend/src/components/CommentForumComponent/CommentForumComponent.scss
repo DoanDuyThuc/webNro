@@ -1,0 +1,56 @@
+.CommentForum {
+
+    &__ReplyComment {
+        margin-top: 10px;
+        text-align: end;
+    }
+
+    &_Hold {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+
+        &__Container {
+            flex: 1 0;
+            background-color: #fdf8da;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            align-items: start;
+            gap: 20px;
+
+            &__info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 6px;
+
+                >span {
+                    font-size: 1rem;
+                    font-weight: 600;
+                }
+            }
+
+            &__content {
+                flex: 1 0;
+
+                span {
+                    font-size: 0.6rem;
+                    color: #565656;
+                    font-weight: 600;
+                }
+
+                &--main {
+                    background-color: #fff;
+                    margin-top: 8px;
+                    border-radius: 10px;
+                    padding: 10px;
+                }
+            }
+        }
+    }
+
+
+}
