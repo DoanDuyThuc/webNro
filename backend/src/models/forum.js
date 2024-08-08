@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Forum.belongsTo(models.account, { foreignKey: 'accountId' });
-      Forum.hasMany(models.forum_comment, { foreignKey: 'forumId' });
+      Forum.hasMany(models.forum_comment, { foreignKey: 'forumId', onDelete: 'cascade', hooks: true });
     }
   }
   Forum.init({

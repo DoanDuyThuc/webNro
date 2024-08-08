@@ -166,7 +166,7 @@ export const GetForumCommentService = async (id) => {
 
 export const ReplyForumCommentService = async (token, id, newdata) => {
     try {
-        const res = await axios.post(`${hostLocal}/account/forumPostComment/${id}`, newdata, {
+        const res = await axiosInstance.post(`${hostLocal}/account/forumPostComment/${id}`, newdata, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -180,6 +180,127 @@ export const ReplyForumCommentService = async (token, id, newdata) => {
 export const DeleteforumPostService = async (id) => {
     try {
         const res = await axios.delete(`${hostLocal}/account/DeleteforumPost/${id}`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const GetAllUserService = async (token, id, searchUser = '', page, limit) => {
+    try {
+        const res = await axiosInstance.get(`${hostLocal}/account/getAllUser/${id}/?searchUser=${searchUser}&page=${page}&limit=${limit}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const DeleteUserService = async (token, id, userId) => {
+    try {
+        const res = await axiosInstance.delete(`${hostLocal}/account/DeleteUser/${id}/?userId=${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const DeleteAllUserService = async (token, id, data) => {
+    try {
+        const res = await axiosInstance.delete(`${hostLocal}/account/DeleteAllUser/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                ids: data
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const DeleteAllForumPostService = async (token, data) => {
+    try {
+        const res = await axiosInstance.delete(`${hostLocal}/account/DeleteAllforumPost`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                ids: data
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UpdateUserService = async (token, id, newdata, userId) => {
+
+    try {
+        const res = await axiosInstance.put(`${hostLocal}/account/UpdateUser/${id}/?userId=${userId}`, newdata, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const GetAllPostService = async (token, searchPost = '', page, limit) => {
+
+    try {
+        const res = await axiosInstance.get(`${hostLocal}/account/getAllPost/?searchPost=${searchPost}&page=${page}&limit=${limit}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const GetAllCommentService = async (searchComment = '', page, limit) => {
+
+    try {
+        const res = await axios.get(`${hostLocal}/account/GetAllforumComment/?searchComment=${searchComment}&page=${page}&limit=${limit}`);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const DeleteCommentService = async (token, data) => {
+
+
+    try {
+        const res = await axiosInstance.delete(`${hostLocal}/account/deleteforumComment`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data: {
+                ids: data
+            }
+        });
         return res.data;
     } catch (error) {
         console.log(error);

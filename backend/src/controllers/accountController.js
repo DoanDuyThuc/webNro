@@ -12,7 +12,15 @@ const {
     EditforumPostService,
     forumPostCommentService,
     getforumCommentService,
-    DeleteforumPostService
+    DeleteforumPostService,
+    GetAllUserService,
+    DeleteUserService,
+    DeleteAllUserService,
+    UpdateUserService,
+    GetAllPostService,
+    DeleteAllforumPostService,
+    getAllforumCommentService,
+    DeleteforumCommentService
 } = require('../service/accountService');
 const { refreshTokenJwtService } = require('../service/JwtService');
 const path = require('path');
@@ -152,6 +160,7 @@ const getforumPostAdminController = async (req, res) => {
 const getforumPostDiscussController = async (req, res) => {
     try {
         const { page, limit } = req.query;
+
         const resj = await getforumPostDiscussService(parseInt(page), parseInt(limit));
         res.status(200).json(resj);
     } catch (error) {
@@ -211,6 +220,92 @@ const DeleteforumPostController = async (req, res) => {
     }
 }
 
+const GetAllUserController = async (req, res) => {
+    try {
+        const { searchUser, page, limit } = req.query;
+
+
+        console.log(searchUser, page, limit);
+
+        const resj = await GetAllUserService(searchUser, parseInt(page), parseInt(limit));
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const DeleteUserController = async (req, res) => {
+    try {
+        const id = req.query.userId;
+        const resj = await DeleteUserService(id);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const DeleteAllUserController = async (req, res) => {
+    try {
+        const { ids } = req.body;
+
+        const resj = await DeleteAllUserService(ids);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const UpdateUserController = async (req, res) => {
+    try {
+        const userId = req.query.userId;
+        const newdata = req.body;
+        const resj = await UpdateUserService(userId, newdata);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const GetAllPostController = async (req, res) => {
+    try {
+        const { searchPost, page, limit } = req.query;
+        const resj = await GetAllPostService(searchPost, parseInt(page), parseInt(limit));
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const DeleteAllforumPostController = async (req, res) => {
+    try {
+        const { ids } = req.body;
+        const resj = await DeleteAllforumPostService(ids);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getAllforumCommentController = async (req, res) => {
+    try {
+        const { searchComment, page, limit } = req.query;
+        const resj = await getAllforumCommentService(searchComment, parseInt(page), parseInt(limit));
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const DeleteforumCommentController = async (req, res) => {
+    try {
+        const { ids } = req.body;
+        const resj = await DeleteforumCommentService(ids);
+        res.status(200).json(resj);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     registerController,
     loginController,
@@ -227,5 +322,13 @@ module.exports = {
     EditforumPostController,
     forumPostCommentController,
     getforumCommentController,
-    DeleteforumPostController
+    DeleteforumPostController,
+    GetAllUserController,
+    DeleteUserController,
+    DeleteAllUserController,
+    UpdateUserController,
+    GetAllPostController,
+    DeleteAllforumPostController,
+    getAllforumCommentController,
+    DeleteforumCommentController
 };

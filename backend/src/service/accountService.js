@@ -1,5 +1,6 @@
 const { where } = require('sequelize');
 const db = require('../models/index');
+const { Op } = require('sequelize');
 const { genneralAccessToken, genneralRefreshToken } = require('./JwtService');
 
 const registerService = async (username, password, enterPassword) => {
@@ -259,19 +260,18 @@ const forumPostService = async (newdata) => {
             }
         });
 
-        const post = await db.Forum.create({
-            name: newdata.name,
-            avartar: newdata.avatar,
-            title: newdata.title,
-            content: newdata.content,
-            accountId: newdata.accountId,
-        })
-
         if (user.active === 0) {
             return {
                 message: 'Vui lòng kích hoạt tài khoản để đăng bài !'
             }
         } else if (user.active === 1 || user.is_admin === 1) {
+            const post = await db.Forum.create({
+                name: newdata.name,
+                avartar: newdata.avatar,
+                title: newdata.title,
+                content: newdata.content,
+                accountId: newdata.accountId,
+            })
             return {
                 post,
                 message: 'Đăng Bài Thành Công !'
@@ -412,35 +412,39 @@ const forumPostCommentService = async (newdata, userId) => {
     try {
         const user = await db.account.findOne({
             attributes: ['id', 'username', 'is_admin', 'active'],
-            where: {
-                id: userId
-            }
+            where: { id: userId }
         });
 
-        const post = await db.forum_comment.create({
-            name: newdata.name,
-            avartar: newdata.avartar,
-            content: newdata.content,
-            forumId: newdata.forumId
-        })
+        if (!user) {
+            return {
+                message: 'Người dùng không tồn tại !'
+            };
+        }
 
         if (user.active === 0) {
             return {
                 message: 'Vui lòng kích hoạt tài khoản để đăng bình luận !'
-            }
+            };
         } else if (user.active === 1 || user.is_admin === 1) {
+            const comment = await db.forum_comment.create({
+                name: newdata.name,
+                avartar: newdata.avartar,
+                content: newdata.content,
+                forumId: newdata.forumId
+            });
+
             return {
-                post,
+                comment,
                 message: 'Đăng Bình Luận Thành Công !'
-            }
+            };
         }
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return {
             error,
             message: 'Đăng Bình Luận Thất Bại !'
-        }
+        };
     }
 }
 
@@ -500,6 +504,235 @@ const DeleteforumPostService = async (id) => {
     }
 }
 
+const GetAllUserService = async (searchUser = '', page = 1, limit = 5) => {
+    try {
+        const offset = (page - 1) * limit;
+        const totalPage = await db.account.count({});
+        const user = await db.account.findAll({
+            attributes: ['id', 'username', 'is_admin', 'active', 'tongnap', 'coin', 'vnd'],
+            where: {
+                username: {
+                    [Op.like]: `%${searchUser}%`
+                }
+            },
+            limit: limit,
+            offset: offset
+        });
+
+
+        return {
+            user,
+            totalPage: Math.ceil(totalPage / limit),
+            message: 'Lấy Thông Tin Thành Công !'
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Lấy Thông Tin Thất Bại !'
+        }
+    }
+}
+
+const DeleteUserService = async (idUser) => {
+    try {
+        const result = await db.account.destroy({
+            where: {
+                id: idUser
+            }
+        })
+
+        if (result) {
+            return {
+                message: `Xóa Tài Khoản ${idUser} Thành Công !`
+            }
+        } else {
+            return {
+                message: 'Không tìm thấy tài khoản !'
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Xóa Tài Khoản Thất Bại !'
+        }
+    }
+}
+
+const DeleteAllUserService = async (ids) => {
+    try {
+        const result = await db.account.destroy({
+            where: {
+                id: ids
+            }
+        })
+
+        if (result) {
+            return {
+                message: `Xóa các Tài Khoản Thành Công !`
+            }
+        } else {
+            return {
+                message: 'Không tìm thấy tài khoản để xóa !'
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Xóa Tài Khoản Thất Bại !'
+        }
+    }
+}
+
+const UpdateUserService = async (idUser, newdata) => {
+    try {
+        await db.account.update({
+            username: newdata.username,
+            is_admin: newdata.is_admin,
+            active: newdata.active,
+            tongnap: newdata.tongnap,
+            coin: newdata.coin,
+            vnd: newdata.vnd
+        }, {
+            where: {
+                id: idUser
+            }
+        })
+
+        return {
+            message: 'Chỉnh Sửa Thành Công !'
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Chỉnh Sửa Thất Bại !'
+        }
+    }
+}
+
+const GetAllPostService = async (searchPost = '', page = 1, limit = 5) => {
+    try {
+        const offset = (page - 1) * limit;
+        const totalPage = await db.Forum.count({});
+        const post = await db.Forum.findAll({
+            attributes: ['id', 'avartar', 'title', 'content', 'name'],
+            order: [
+                ['id', 'DESC']
+            ],
+            where: {
+                title: {
+                    [Op.like]: `%${searchPost}%`
+                }
+            },
+            limit: limit,
+            offset: offset
+        })
+
+        return {
+            post,
+            totalPage: Math.ceil(totalPage / limit),
+            message: 'Lấy Bài Viết Thành Công !'
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Lấy Bài Viết Thất Bại !'
+        }
+    }
+}
+
+const DeleteAllforumPostService = async (ids) => {
+    try {
+        const result = await db.Forum.destroy({
+            where: {
+                id: ids
+            }
+        })
+
+        if (result) {
+            return {
+                message: `Xóa các Bài Viết Thành Công !`
+            }
+        } else {
+            return {
+                message: 'Không tìm thấy bài viết để xóa !'
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+        return {
+            error,
+            message: 'Xóa Bài Viết Thất Bại !'
+        }
+    }
+}
+
+const getAllforumCommentService = async (searchComment = '', page = 1, limit = 5) => {
+    try {
+        const offset = (page - 1) * limit;
+        const totalPage = await db.forum_comment.count({});
+        const comment = await db.forum_comment.findAll({
+            attributes: ['id', 'avartar', 'content', 'name'],
+            include: {
+                model: db.Forum,
+                attributes: ['id', 'name', 'title']
+            },
+            order: [
+                ['id', 'DESC']
+            ],
+            where: {
+                content: {
+                    [Op.like]: `%${searchComment}%`
+                }
+            },
+            limit: limit,
+            offset: offset
+        })
+
+        return {
+            comment,
+            totalPages: Math.ceil(totalPage / limit),
+            message: 'Lấy Bình Luận Thành Công !'
+        }
+    } catch (error) {
+        return {
+            error,
+            message: 'Lấy Bình Luận Thất Bại !'
+        }
+    }
+}
+
+const DeleteforumCommentService = async (ids) => {
+    try {
+        const result = await db.forum_comment.destroy({
+            where: {
+                id: ids
+            }
+        });
+
+        if (result) {
+            return {
+                message: `Xóa Bình Luận Thành Công !`
+            }
+        }
+    } catch (error) {
+        return {
+            error,
+            message: 'Xóa Bình Luận Thất Bại !'
+        }
+    }
+}
+
 module.exports = {
     registerService,
     loginService,
@@ -514,5 +747,13 @@ module.exports = {
     EditforumPostService,
     forumPostCommentService,
     getforumCommentService,
-    DeleteforumPostService
+    DeleteforumPostService,
+    GetAllUserService,
+    DeleteUserService,
+    DeleteAllUserService,
+    UpdateUserService,
+    GetAllPostService,
+    DeleteAllforumPostService,
+    getAllforumCommentService,
+    DeleteforumCommentService
 };

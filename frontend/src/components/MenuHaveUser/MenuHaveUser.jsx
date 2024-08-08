@@ -170,6 +170,11 @@ function MenuHaveUser() {
                         <li className='MenuHaveUser_Select_item'>
                             <NavLink className='MenuHaveUser_Select_item-text' to='/user/postForum'>Đăng bài diễn đàn</NavLink>
                         </li>
+                        {user?.user.is_admin && (
+                            <li className='MenuHaveUser_Select_item'>
+                                <NavLink className='MenuHaveUser_Select_item-text' to='/admin/manager/Dashboard'>Trang Admin</NavLink>
+                            </li>
+                        )}
                         <li className='MenuHaveUser_Select_item'>
                             <span onClick={handleLogout} className='MenuHaveUser_Select_item-text'>Đăng Xuất</span>
                         </li>

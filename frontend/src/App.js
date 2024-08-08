@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { axiosInstance, GetUserIdService, RefreshTokenService } from './services/AccountService';
 import { refreshToken, SavePlayer } from './redux/slider/userSlice';
 import { useQuery } from 'react-query';
+import DefaultAdminComponent from './components/DefaultAdminComponent/DefaultAdminComponent';
 
 function App() {
 
@@ -88,12 +89,15 @@ function App() {
           {routes(user).map((route, index) => {
 
             const Layout = route.isHeaderFooter ? DefaultComponent : React.Fragment;
+            const LayoutAdmin = route.isAdminPage ? DefaultAdminComponent : React.Fragment;
 
             return (
 
               <Route key={index} path={route.path} element={
                 <Layout>
-                  <route.page />
+                  <LayoutAdmin>
+                    <route.page />
+                  </LayoutAdmin>
                 </Layout>
               } />
             )
